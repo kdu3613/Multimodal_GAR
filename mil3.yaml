@@ -1,0 +1,174 @@
+DATALOADER:
+  evaluate: False
+  manual_seed: 1994
+  root: /mnt/server14_hard1/jiny/GAR/Datasets/JRDB/
+  neptune: False
+
+  num_actions: 27
+  log_path: experiments/debug/log/
+  save_path: experiments/debug/weights/
+  pretrained_path: None
+
+  model:
+      hidden_dim: 00
+
+  train:
+      batch_size: 10
+      n_epochs: 50
+      num_workers: 3
+
+      val_epoch: 1
+      print_freq: 50
+      train_backbone: False
+
+      augmentation:
+          image_size: [720,1280]
+          crop_size: 5
+          num_boxes: 100
+          sample:
+              num_frames: 15
+          point_cloud:
+              num_points: 35000
+              voxel_size:
+              - 0.1
+              - 0.1
+              - 1.25
+              
+          VFE:
+              NAME: MeanVFE
+              
+          POINT_CLOUD_RANGE: [-100,-100, -25, 100, 100, 25]
+          NUM_POINT_FEATURES: 4
+
+          POINT_FEATURE_ENCODING: 
+              encoding_type: absolute_coordinates_encoding
+              used_feature_list: ['x', 'y', 'z', 'intensity']
+              src_feature_list: ['x', 'y', 'z', 'intensity'] 
+          
+          DATA_PROCESSOR:
+          - NAME: mask_points_and_boxes_outside_range
+            REMOVE_OUTSIDE_BOXES: True
+          - NAME: shuffle_points
+            SHUFFLE_ENABLED: 
+              'train': True,
+              'test': False
+          - NAME: transform_points_to_voxels
+            VOXEL_SIZE: [0.1, 0.1, 1.25]
+            MAX_POINTS_PER_VOXEL: 5
+            MAX_NUMBER_OF_VOXELS: 
+              'train': 16000
+              'test': 40000
+
+
+      optimizer:
+          type: adam
+          base_lr: 0.0001
+          weight_decay: 0.0001
+          momentum: 0.9
+      scheduler:
+          milestone: [30]
+          gamma: 0.1
+
+  test:
+      batch_size: 10
+      num_workers: 3
+
+      augmentation:
+          crop_size: 5
+          num_boxes: 12
+          sample:
+              num_frames: 15
+
+RGB_BACKBONE:
+    I3D_FREEZE: True
+    EMBEDDING_DIM : 512
+    INTER_PERSON : False
+    GAT_module: False
+
+    two_stage_att: False
+
+LiDAR_BACKBONE:
+  CLASS_NAMES: ['Pedestrian']
+
+  DATA_CONFIG:
+      # _BASE_CONFIG_: cfgs/dataset_configs/custom_dataset.yaml
+
+  MODEL:
+      NAME: VoxelRCNN
+
+      VFE:
+          NAME: MeanVFE
+
+      BACKBONE_3D:
+          NAME: VoxelBackBone8x
+
+      ROI_HEAD:
+          NAME: VoxelRCNNHead
+          CLASS_AGNOSTIC: True
+
+          SHARED_FC: [512, 512]
+          DP_RATIO: 0.3
+
+
+          ROI_GRID_POOL:
+              FEATURES_SOURCE: ['x_conv2', 'x_conv3', 'x_conv4']
+              PRE_MLP: True
+              GRID_SIZE: 6
+              POOL_LAYERS:
+                  x_conv2:
+                      MLPS: [[32, 32]]
+                      QUERY_RANGES: [[4, 4, 4]]
+                      POOL_RADIUS: [0.4]
+                      NSAMPLE: [16]
+                      POOL_METHOD: max_pool
+                  x_conv3:
+                      MLPS: [[32, 32]]
+                      QUERY_RANGES: [[4, 4, 4]]
+                      POOL_RADIUS: [0.8]
+                      NSAMPLE: [16]
+                      POOL_METHOD: max_pool
+                  x_conv4:
+                      MLPS: [[32, 32]]
+                      QUERY_RANGES: [[4, 4, 4]]
+                      POOL_RADIUS: [1.6]
+                      NSAMPLE: [16]
+                      POOL_METHOD: max_pool
+
+  SELF_ATT1:
+    USE: True
+    DIM: 3
+    INTER_PERSON: False
+
+  two_stage_att: False
+
+GAR_MODEL:
+    MODALITY : "Multi"
+
+    FUSION : 'Attention_mat'
+    SIGMA : 10
+    
+
+    FEAT_NORM: True
+    EUCLIDEAN : True
+    ind_action_concat : True
+    sg_feat_org : False
+    FEATURE_DIM: 1024
+    HIDDEN_DIM: 512
+
+    sim: "cosine"
+TRAINER:
+    GPU: "0"
+    BATCH_SIZE: 1
+    IS_SHUFFLE: True
+    SAVE_PATH: "/mnt/server6_hard1/donguk/Multimodal_GAR/Multimodal_cfg/Attention_fusion_max_cosine4_after_action.pt"
+    model_detail: "Multimodal_2d_self_attention_batchnorm_sum_euclidean_only_grouping after actions"
+
+    STAGE_1:
+        EPOCH: 50
+        LEARNING_RATE: 0.001
+        LOSS: "L_total"
+
+    STAGE_2:
+        EPOCH: 0
+        LEARNING_RATE: 0.0003
+        LOSS: "L_total"
