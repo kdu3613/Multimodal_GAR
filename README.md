@@ -4,8 +4,8 @@
 
 2023 IEEE Visual Communications and Image Processing (*VCIP*)
 
-<p align="center" width="100%">
-<img src="img/teaser.png" width="100%" alt="teaser">
+<p align="center" width="50%">
+<img src="img/teaser.png" width="75%" alt="teaser">
 </p>
 
 
