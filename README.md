@@ -1,32 +1,52 @@
-# [IEIE 2024] Mitigating Hallucinations in Vision Language Models with High-pass Filters
+# [VCIP 2023] Multi-modal Social Group Activity Recognition in Panoramic Scene
 
-[paper](https://www.dbpia.co.kr/journal/articleDetail?nodeId=NODE11890949)
+[paper](https://ieeexplore.ieee.org/document/10402675)
 
-2024년도 대한전자공학회 하계학술종합대회
+2023 IEEE Visual Communications and Image Processing (*VCIP*)
+
+<p align="center" width="100%">
+<img src="img/teaser.png" width="100%" alt="teaser">
+</p>
+
 
 ## Abstract
 
-Recent advancements in large-scale natural language processing models have been successfully progressing, demonstrating outstanding performance across various tasks. Building on this progress, large vision-language models capable of processing both images and natural language simultaneously have been rapidly growing and gaining significant attention in the field of computer vision. However, a common issue with vision-language models is the hallucination phenomenon, where the model incorrectly identifies objects that do not appear in the image.
-
-In this paper, we introduce a method to mitigate hallucination by leveraging high-pass filtering techniques to enhance the model’s understanding of images. High-pass filtering provides diverse perspectives on a single image, aiding the model in better comprehending visual information and reducing hallucination. The proposed approach does not require additional training for large vision-language models and is both simple and easily applicable to various models. Experimental results on the POPE benchmark, a standard evaluation framework for assessing hallucination, demonstrate the effectiveness of our method.
+Group Activity Recognition (GAR) is a challenging
+problem in computer vision due to the intricate dynamics and
+interactions among individuals. The existing methods utilize RGB
+videos face challenges in panoramic environments with numerous
+individuals and social groups. In this paper, we propose Multi-
+modal Group Activity Recognition network (MGAR-net), that
+leverages the combined power of RGB and LiDAR modalities.
+Our approach effectively utilizes information from both modalities
+thus robustly and accurately captures individual relationships and
+detects social groups in face of optical challenges. By harnessing
+the capability of LiDAR with our new fusion module, called
+Distance Aware Fusion Module (DAFM), MGAR-net acquires
+valuable 3D structure information. We conduct experiments on
+the JRDB-Act dataset, which contains challenging scenarios with
+numerous people. The results demonstrate that LiDAR data
+provide valuable information for social grouping and recognizing
+individual action and group activities, particularly in crowded
+group settings. For social grouping, our MGAR-net improve
+performance by about 12% compared to the existing state-of-the-
+art models in terms of the AP metric.
 
 
 ## Setup
 
 ```bash
-conda create llm python=3.10
-conda activate llm
-git clone https://github.com/kdu3613/IEIE2024.git
-cd neurips2024
+conda create MGAR python=3.10
+conda activate MGAR
+git clone https://github.com/kdu3613/Multimodal_GAR.git
+cd Multimodal_GAR
 pip install -r requirements.txt
 ```
 
+## Usage
 
-## Models
+The model and training settings can be configured using the `Multimodal_cfg/mil3.yaml` file, and model training and evaluation can be performed using `train_func.py`.
 
-* **LLaVA-1.5**
-* **Instruct-BLIP**
-* **Qwen-VL**
 
 
 ## Method
@@ -37,26 +57,17 @@ pip install -r requirements.txt
 </p>
 
 
-## Evaluation (TODO)
+## Evaluation
 
-* **POPE (llava, qwen-vl)**: `bash eval_bench/scripts/pope_eval_batch.sh` 
-  - Need to specify "model", "model_path"
-* **POPE (instructblip)**: `bash experiments/cd_scripts/pope_eval.sh` 
-  - Need to specify "model", "model_path"
-* **CHAIR (llava, qwen-vl, instructblip)**: `bash eval_bench/scripts/chair_eval_batch.sh`
-  - Need to specify "model", "model_path", "type"
-* **LLaVA-Bench (llava)**: `bash eval_bench/scripts/llava_bench_eval.sh`
-  - Need to specify "model", "model_path"
-* **MME (llava, qwen-vl, instructblip)**: `bash experiments/cd_scripts/mme_eval.sh`
-  - Need to specify "model", "model_path"
   
 <p align="center" width="100%">
 <img src="img/table.png" width="100%" alt="Method">
 </p>
 
 ## Acknowledgments
-This codebase borrows from most notably [VCD](https://github.com/DAMO-NLP-SG/VCD), [OPERA](https://github.com/shikiw/OPERA), and [LLaVA](https://github.com/haotian-liu/LLaVA).
-Many thanks to the authors for generously sharing their codes!
+This codebase was built based on [JRDB](https://github.com/JRDB-dataset/jrdb_toolkit) and [Mahsa et. al.](https://arxiv.org/abs/2007.02632).
+
+Many thanks to the authors!
 
 -----
 
