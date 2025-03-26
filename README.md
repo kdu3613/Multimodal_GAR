@@ -2,7 +2,7 @@
 
 [paper](https://ieeexplore.ieee.org/document/10402675)
 
-2023 IEEE Visual Communications and Image Processing (*VCIP*)
+2023 IEEE Visual Communications and Image Processing (*VCIP*).
 
 <p align="center" width="50%">
 <img src="img/teaser.png" width="75%" alt="teaser">
